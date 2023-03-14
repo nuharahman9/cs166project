@@ -299,7 +299,7 @@ public class Hotel {
                 switch (readChoice()){
                    case 1: viewHotels(esql); break;
                    case 2: viewRooms(esql); break;
-                   case 3: bookRooms(esql); break;
+                   case 3: bookRooms(esql, authorisedUser); break;
                    case 4: viewRecentBookingsfromCustomer(esql); break;
                    case 5: updateRoomInfo(esql); break;
                    case 6: viewRecentUpdates(esql); break;
@@ -402,44 +402,44 @@ public class Hotel {
 
    public static void viewHotels(Hotel esql) {
       //how do we call sql function from java? 
-      try{
-         System.out.print("\tEnter latitude: "); 
-         Float latitude = Float.parseFloat(in.readLine()); 
-         System.out.print("\tEnter longitude: "); 
-         Float longitude = Float.parseFloat(in.readLine()); 
-         //? lol now what 
-      }catch(Exception e){
-         System.err.println(e.getMessage()); 
-         return null; 
-      }
+      // try{
+      //    System.out.print("\tEnter latitude: "); 
+      //    Float latitude = Float.parseFloat(in.readLine()); 
+      //    System.out.print("\tEnter longitude: "); 
+      //    Float longitude = Float.parseFloat(in.readLine()); 
+      //    //? lol now what 
+      // }catch(Exception e){
+      //    System.err.println(e.getMessage()); 
+      //    return null; 
+      // }
 
    }
    public static void viewRooms(Hotel esql) {
-      java.sql.Date sqlDate = null; 
-      //? come back for dates in string query 
+      // java.sql.Date sqlDate = null; 
+      // //? come back for dates in string query 
 
-      try{
-         System.out.print("\tEnter date of stay (yyyy-MM-dd): "); 
-         String dateStr = in.readLine(); 
-         sqlDate = Date.valueOf(dateStr);
+      // try{
+      //    System.out.print("\tEnter date of stay (yyyy-MM-dd): "); 
+      //    String dateStr = in.readLine(); 
+      //    sqlDate = Date.valueOf(dateStr);
 
-      }catch(IllegalArgumentException e){
-         System.err.println(e.getMessage()); 
-         return null; 
-      }
+      // }catch(IllegalArgumentException e){
+      //    System.err.println(e.getMessage()); 
+      //    return null; 
+      // }
 
-      try{
-         System.out.print("\tEnter hotelID: "); 
-         Integer hotelID = Integer.parseInt(in.readLine());
-         String query = String.format(""); 
+      // try{
+      //    System.out.print("\tEnter hotelID: "); 
+      //    Integer hotelID = Integer.parseInt(in.readLine());
+      //    String query = String.format(""); 
 
-      }catch(Exception e){
-         System.err.println (e.getMessage()); 
-         return null; 
-      }
+      // }catch(Exception e){
+      //    System.err.println (e.getMessage()); 
+      //    return null; 
+      // }
 
    }
-   public static void bookRooms(Hotel esql) {
+   public static void bookRooms(Hotel esql, String authorisedUser) {
       try{
          //hotel id, room number, date 
          // extra : throw error messages if any of these are not valid? 
@@ -449,7 +449,20 @@ public class Hotel {
          Integer roomNumber = Integer.parseInt(in.readLine()); 
          System.out.print("\tEnter date (yyyy-MM-dd): "); 
          String dateSt = in.readLine(); 
-         String query = "INSERT INTO "
+         String query = String.format("SELECT * FROM RoomBookings WHERE EXISTS(SELECT RoomBookings.bookingID FROM RoomBookings WHERE roomNumber = %d AND hotelID = %d AND bookingDate = '%s');", roomNumber, hotelID, dateSt);
+         int rowCount = esql.executeQuery(query); 
+         if (rowCount = 0){
+            String query2 = String.format("INSERT INTO RoomBookings VALUES (DEFAULT, %d, %d, %d, '%s');", authorisedUser, hotelID, roomNumber, bookingDate); 
+            int rowCount = esql.executeQuery(query); 
+            System.out.println("total rows: " + rowCount); 
+         } else { 
+            System.out.print("\tInvalid!"); 
+            return null; 
+
+         }
+      }catch(Exception e){
+         System.err.println(e.getMessage());
+         return null; 
       }
 
 
