@@ -444,25 +444,26 @@ public class Hotel {
          //hotel id, room number, date 
          // extra : throw error messages if any of these are not valid? 
          System.out.print("\tEnter hotelID: "); 
-         Integer hotelID = Integer.parseInt(in.readLine()); 
+         Integer hotelID = Integer.parseInt(in.readLine());
+	 Integer userID = Integer.parseInt(authorisedUser);  
          System.out.print("\tEnter room number: "); 
          Integer roomNumber = Integer.parseInt(in.readLine()); 
          System.out.print("\tEnter date (yyyy-MM-dd): "); 
          String dateSt = in.readLine(); 
          String query = String.format("SELECT * FROM RoomBookings WHERE EXISTS(SELECT RoomBookings.bookingID FROM RoomBookings WHERE roomNumber = %d AND hotelID = %d AND bookingDate = '%s');", roomNumber, hotelID, dateSt);
          int rowCount = esql.executeQuery(query); 
-         if (rowCount = 0){
-            String query2 = String.format("INSERT INTO RoomBookings VALUES (DEFAULT, %d, %d, %d, '%s');", authorisedUser, hotelID, roomNumber, bookingDate); 
-            int rowCount = esql.executeQuery(query); 
+         if (rowCount == 0){
+            String query2 = String.format("INSERT INTO RoomBookings VALUES (DEFAULT, %d, %d, %d, '%s');", userID, hotelID, roomNumber, dateSt); 
+            rowCount = esql.executeQuery(query); 
             System.out.println("total rows: " + rowCount); 
          } else { 
             System.out.print("\tInvalid!"); 
-            return null; 
+            return; 
 
          }
       }catch(Exception e){
          System.err.println(e.getMessage());
-         return null; 
+         return; 
       }
 
 
