@@ -445,7 +445,7 @@ public class Hotel {
          // extra : throw error messages if any of these are not valid? 
          System.out.print("\tEnter hotelID: "); 
          Integer hotelID = Integer.parseInt(in.readLine());
-	 Integer userID = Integer.parseInt(authorisedUser);  
+	      Integer userID = Integer.parseInt(authorisedUser);  
          System.out.print("\tEnter room number: "); 
          Integer roomNumber = Integer.parseInt(in.readLine()); 
          System.out.print("\tEnter date (yyyy-MM-dd): "); 
@@ -469,11 +469,53 @@ public class Hotel {
 
    }
    public static void viewRecentBookingsfromCustomer(Hotel esql) {}
-   public static void updateRoomInfo(Hotel esql) {}
+   public static void updateRoomInfo(Hotel esql) {
+      //hotelID, roomNumber, price, imageURL
+      try{
+         System.out.print("\tEnter Hotel ID: ");
+         int hotelID = Integer.parseInt(in.readLine());
+         System.out.print("\tEnter Room Number: ");
+         int roomNumber = Integer.parseInt(in.readLine());
+
+         boolean updating = true;
+         while(updating) {
+            System.out.println("1. Update Room Price");
+            System.out.println("2. Update Room imageURL");
+            System.out.println("...........................");
+            System.out.println("3. Back");
+
+            switch(readChoice()) {
+               case 1: System.out.print("\tEnter New Room Price: ");
+                       int price = Integer.parseInt(in.readLine());
+
+                       String query = String.format("UPDATE Rooms SET price = %d WHERE hotelID = %d AND roomNumber = %d;", price, hotelID, roomNumber);
+                       esql.executeQuery(query);
+                       System.out.println("Room Price has been updated");
+                       break;
+               case 2: System.out.print("\tEnter New Image URL: ");
+                       String url = in.readLine();
+
+                       query = String.format("UPDATE Rooms SET imageURL = %d WHERE hotelID = %d AND roomNumber = %d;", url, hotelID, roomNumber);
+                       esql.executeQuery(query);
+                       System.out.println("Room imageURL has been updated");
+                       break;
+               case 3: updating = false; break;
+               default: System.out.print("Invalid Input, please try again"); break;
+            }
+         }
+      }catch(Exception e){
+         System.err.println(e.getMessage());
+      }
+   }
+
    public static void viewRecentUpdates(Hotel esql) {}
-   public static void viewBookingHistoryofHotel(Hotel esql) {}
+   public static void viewBookingHistoryofHotel(Hotel esql) {
+      //bookingID, customer name, hotelID, roomNumber, bookingDate
+   }
    public static void viewRegularCustomers(Hotel esql) {}
-   public static void placeRoomRepairRequests(Hotel esql) {}
+   public static void placeRoomRepairRequests(Hotel esql) {
+      //hotelID, roomNumber, companyID
+   }
    public static void viewRoomRepairHistory(Hotel esql) {}
 
 }//end Hotel
