@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.lang.Math;
 import java.sql.Date; 
+import java.time.format.DateTimeFormatter; 
 /**
  * This class defines a simple embedded SQL utility class that is designed to
  * work with PostgreSQL JDBC drivers.
@@ -440,32 +441,41 @@ public class Hotel {
 
    }
    public static void bookRooms(Hotel esql, String authorisedUser) {
+      int hotelid = -1; 
+      String dateSt = ""; 
+      int roomnum = -1;  
       try{
-         //hotel id, room number, date 
-         // extra : throw error messages if any of these are not valid? 
-         System.out.print("\tEnter hotelID: "); 
-         Integer hotelID = Integer.parseInt(in.readLine());
-	      Integer userID = Integer.parseInt(authorisedUser);  
-         System.out.print("\tEnter room number: "); 
-         Integer roomNumber = Integer.parseInt(in.readLine()); 
-         System.out.print("\tEnter date (yyyy-MM-dd): "); 
-         String dateSt = in.readLine(); 
-         String query = String.format("SELECT * FROM RoomBookings WHERE EXISTS(SELECT RoomBookings.bookingID FROM RoomBookings WHERE roomNumber = %d AND hotelID = %d AND bookingDate = '%s');", roomNumber, hotelID, dateSt);
-         int rowCount = esql.executeQuery(query); 
-         if (rowCount == 0){
-            String query2 = String.format("INSERT INTO RoomBookings VALUES (DEFAULT, %d, %d, %d, '%s');", userID, hotelID, roomNumber, dateSt); 
-            rowCount = esql.executeQuery(query); 
-            System.out.println("total rows: " + rowCount); 
-         } else { 
-            System.out.print("\tInvalid!"); 
-            return; 
-
-         }
-      }catch(Exception e){
-         System.err.println(e.getMessage());
-         return; 
-      }
-
+	System.out.print("\tEnter Hotel ID: "); 
+	hotelid = Integer.parseInt(in.readLine()); 
+	System.out.print("\tEnter Room Number: "); 
+	roomnum = Integer.parseInt(in.readLine()); 
+	String query = String.format( "select * from Rooms where Rooms.roomNumber = %d and Rooms.hotelID = %d;", roomnum, hotelid); 	
+	int rowCt = esql.executeQuery(query); 
+	if (rowCt == 0) { 
+		System.out.print("\tWe're sorry. This room and hotel do not exist in our database."); 
+		return; 
+	}
+	System.out.print("\tEnter the date of your stay (YYYY-MM-dd): "); 
+	dateSt = in.readLine();
+//come back to later. check if inputted date is valid 	
+	query = String.format("select * from RoomBookings WHERE RoomBookings.roomNumber = %d and RoomBookings.hotelID = %d and RoomBookings.bookingDate = '%s';", hotelid, roomnum, dateSt);
+        rowCt = esql.executeQuery(query); 
+	if (rowCt != 0) {
+		System.out.print("\tWe're sorry. The room you requested is not available. Please try a different date or room. "); 
+		return; 
+	}
+	query = String.format("insert into RoomBookings VALUES (DEFAULT, %s, %d, %d, '%s');", authorisedUser, hotelid, roomnum, dateSt); 
+      	esql.executeUpdate(query);
+       	System.out.print("\tBooking successful! Your total is: "); 	
+	query = String.format("select Rooms.price from Rooms where Rooms.hotelID = %d and Rooms.roomNumber = %d;", hotelid, roomnum);
+	List<List<String>> res = esql.executeQueryAndReturnResult(query);
+        res.forEach(i -> {
+	   System.out.println(i + "\t"); 
+	});	
+      }catch(Exception e){ 
+		System.err.println(e.getMessage()); 
+	}
+     
 
    }
    public static void viewRecentBookingsfromCustomer(Hotel esql) {}
