@@ -301,7 +301,7 @@ public class Hotel {
                    case 1: viewHotels(esql); break;
                    case 2: viewRooms(esql); break;
                    case 3: bookRooms(esql, authorisedUser); break;
-                   case 4: viewRecentBookingsfromCustomer(esql); break;
+                   case 4: viewRecentBookingsfromCustomer(esql, authorisedUser); break;
                    case 5: updateRoomInfo(esql); break;
                    case 6: viewRecentUpdates(esql); break;
                    case 7: viewBookingHistoryofHotel(esql); break;
@@ -473,12 +473,21 @@ public class Hotel {
 	   System.out.println(i + "\t"); 
 	});	
       }catch(Exception e){ 
-		System.err.println(e.getMessage()); 
+		System.out.println("\tIt appears that your input was invalid! Please try again."); 
 	}
      
 
    }
-   public static void viewRecentBookingsfromCustomer(Hotel esql) {}
+   public static void viewRecentBookingsfromCustomer(Hotel esql, String authorisedUser) {
+      try{
+         String query = String.format("select RoomBookings.hotelID, RoomBookings.roomNumber, RoomBookings.bookingDate, Room.price where Room.roomNumber = RoomBookings.roomNumber and Room.hotelID = RoomBookings.hotelID and RoomBookings.customerID = %s order by RoomBooking.bookingDate limit 5;",authorisedUser); 
+         
+      }catch(Exception e){
+         System.err.println(e.getMessage()); 
+      }
+
+
+   }
    public static void updateRoomInfo(Hotel esql) {
       //hotelID, roomNumber, price, imageURL
       try{
@@ -499,15 +508,15 @@ public class Hotel {
                        int price = Integer.parseInt(in.readLine());
 
                        String query = String.format("UPDATE Rooms SET price = %d WHERE hotelID = %d AND roomNumber = %d;", price, hotelID, roomNumber);
-                       esql.executeQuery(query);
-                       System.out.println("Room Price has been updated");
+                       esql.executeUpdate(query);
+                       System.out.println("\tRoom Price has been updated!");
                        break;
                case 2: System.out.print("\tEnter New Image URL: ");
                        String url = in.readLine();
 
                        query = String.format("UPDATE Rooms SET imageURL = %d WHERE hotelID = %d AND roomNumber = %d;", url, hotelID, roomNumber);
-                       esql.executeQuery(query);
-                       System.out.println("Room imageURL has been updated");
+                       esql.executeUpdate(query);
+                       System.out.println(\t"Room imageURL has been updated!");
                        break;
                case 3: updating = false; break;
                default: System.out.print("Invalid Input, please try again"); break;
