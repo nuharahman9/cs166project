@@ -53,6 +53,13 @@ CREATE TABLE RoomBookings (
                     FOREIGN KEY(hotelID, roomNumber) REFERENCES Rooms(hotelID, roomNumber)
 );
 
+
+CREATE VIEW RoomPriceView AS 
+SELECT RoomBookings.bookingDate, RoomBookings.customerID, RoomBookings.hotelID, RoomBookings.roomNumber, 
+RoomBookings.bookingDate, Rooms.price
+FROM RoomBookings, Rooms 
+WHERE Rooms.hotelID = RoomBookings.hotelID AND Rooms.roomNumber = RoomBookings.roomNumber; 
+
 CREATE TABLE RoomRepairs (  
                             repairID serial,
                             companyID integer NOT NULL,
