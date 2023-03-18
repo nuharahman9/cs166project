@@ -487,7 +487,6 @@ public class Hotel {
          System.err.println(e.getMessage()); 
       }
 
-
    }
    public static void updateRoomInfo(Hotel esql) {
       //hotelID, roomNumber, price, imageURL
