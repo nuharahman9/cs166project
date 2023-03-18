@@ -402,17 +402,19 @@ public class Hotel {
 // Rest of the functions definition go in here
 
    public static void viewHotels(Hotel esql) {
-      //how do we call sql function from java? 
-      // try{
-      //    System.out.print("\tEnter latitude: "); 
-      //    Float latitude = Float.parseFloat(in.readLine()); 
-      //    System.out.print("\tEnter longitude: "); 
-      //    Float longitude = Float.parseFloat(in.readLine()); 
-      //    //? lol now what 
-      // }catch(Exception e){
-      //    System.err.println(e.getMessage()); 
-      //    return null; 
-      // }
+      how do we call sql function from java? 
+      try{
+         System.out.print("\tEnter latitude: "); 
+         Float latitude = Float.parseFloat(in.readLine()); 
+         System.out.print("\tEnter longitude: "); 
+         Float longitude = Float.parseFloat(in.readLine()); 
+         String query = String.format("select * from Hotel where calculate_distance(Hotel.latitude, Hotel.longitude, %e, %e) < 30;", latitude, longitude);
+         int rowCount = esql.executeQueryAndPrintResult(query); 
+         
+      }catch(Exception e){
+         System.err.println(e.getMessage()); 
+         return null; 
+      }
 
    }
    public static void viewRooms(Hotel esql) {
