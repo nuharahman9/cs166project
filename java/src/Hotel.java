@@ -480,7 +480,8 @@ public class Hotel {
    }
    public static void viewRecentBookingsfromCustomer(Hotel esql, String authorisedUser) {
       try{
-         String query = String.format("select RoomBookings.hotelID, RoomBookings.roomNumber, RoomBookings.bookingDate, Room.price where Room.roomNumber = RoomBookings.roomNumber and Room.hotelID = RoomBookings.hotelID and RoomBookings.customerID = %s order by RoomBooking.bookingDate limit 5;",authorisedUser); 
+         String query = String.format("select RoomBookings.hotelID, RoomBookings.roomNumber, RoomBookings.bookingDate, Rooms.price from Rooms, RoomBookings where Rooms.roomNumber = RoomBookings.roomNumber and Rooms.hotelID = RoomBookings.hotelID and RoomBookings.customerID = %s order by RoomBookings.bookingDate desc limit 5",authorisedUser); 
+         int rowCount = esql.executeQueryAndPrintResult(query); 
          
       }catch(Exception e){
          System.err.println(e.getMessage()); 
