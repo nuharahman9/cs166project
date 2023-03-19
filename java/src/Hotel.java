@@ -24,8 +24,9 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.ArrayList;
 import java.lang.Math;
-import java.sql.Date; 
-import java.time.format.DateTimeFormatter; 
+import java.text.ParseException; 
+import java.text.SimpleDateFormat; 
+
 /**
  * This class defines a simple embedded SQL utility class that is designed to
  * work with PostgreSQL JDBC drivers.
@@ -195,6 +196,18 @@ public class Hotel {
        }//end while
        stmt.close ();
        return rowCount;
+   }
+   public boolean isValidDate(String input){
+      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
+      format.setLenient(false); 
+      try{
+         format.parse(input.trim()); 
+      } catch(ParseException e){
+         return false; 
+      }
+      return true; 
+
+
    }
 
    /**
@@ -410,7 +423,7 @@ public class Hotel {
          Float longitude = Float.parseFloat(in.readLine()); 
          String query = String.format("select * from Hotel where calculate_distance(Hotel.latitude, Hotel.longitude, %e, %e) < 30;", latitude, longitude);
          int rowCount = esql.executeQueryAndPrintResult(query); 
-         
+
       }catch(Exception e){
          System.err.println(e.getMessage()); 
          return null; 
@@ -459,7 +472,11 @@ public class Hotel {
 	}
 	System.out.print("\tEnter the date of your stay (YYYY-MM-dd): "); 
 	dateSt = in.readLine();
-//come back to later. check if inputted date is valid 	
+   if (!isValidDate(dateSt)){
+      System.out.print("\tPlease enter a valid date according to the format 'YYYY-MM-dd'.")
+      return; 
+   }
+
 	query = String.format("select * from RoomBookings WHERE RoomBookings.roomNumber = %d and RoomBookings.hotelID = %d and RoomBookings.bookingDate = '%s';", hotelid, roomnum, dateSt);
         rowCt = esql.executeQuery(query); 
 	if (rowCt != 0) {
