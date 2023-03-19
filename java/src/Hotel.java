@@ -535,10 +535,11 @@ public class Hotel {
 
                        query = String.format("UPDATE Rooms SET imageURL = %d WHERE hotelID = %d AND roomNumber = %d;", url, hotelID, roomNumber);
                        esql.executeUpdate(query);
-                       System.out.println(\t"Room imageURL has been updated!");
+                       System.out.println("\tRoom imageURL has been updated!");
                        break;
                case 3: updating = false; break;
                default: System.out.print("Invalid Input, please try again"); break;
+               //INSERT stuff
             }
          }
       }catch(Exception e){
@@ -546,9 +547,39 @@ public class Hotel {
       }
    }
 
-   public static void viewRecentUpdates(Hotel esql) {}
+   public static void viewRecentUpdates(Hotel esql) {
+      try{
+         System.out.print("\tEnter Hotel ID: ");
+         int hotelID = Integer.parseInt(in.readLine());
+
+         String query = String.format("(SELECT * FROM RoomUpdatesLog WHERE hotelID = %s ORDER BY updatedON DESC LIMIT 5) ORDER BY updatedON ASC;", hotelID);
+         esql.executeQueryAndPrintResult(query);
+      }catch(Exception e){
+         System.err.println(e.getMessage());
+      }
+   }
    public static void viewBookingHistoryofHotel(Hotel esql) {
       //bookingID, customer name, hotelID, roomNumber, bookingDate
+      try{
+         System.out.print("\tEnter Hotel ID: ");
+         int hotelID = Integer.parseInt(in.readLine());
+         System.out.print("\tEnter Room Number: ");
+         int roomNumber = Integer.parseInt(in.readLine());
+
+         System.out.print("\tEnter Starting Booking Date: ");
+         String sDate = in.readLine();
+         if (!isValidDate(sDate)){
+            System.out.print("\tPlease enter a valid date according to the format 'YYYY-MM-dd'.")
+            return; }
+         System.out.print("\tEnter Ending Booking Date: ");
+         String eDate = in.readLine();
+         if (!isValidDate(sDate)){
+            System.out.print("\tPlease enter a valid date according to the format 'YYYY-MM-dd'.")
+            return; }
+            
+         }catch(Exception e){
+            System.err.println(e.getMessage());
+         }
    }
    public static void viewRegularCustomers(Hotel esql) {}
    public static void placeRoomRepairRequests(Hotel esql) {
