@@ -314,7 +314,7 @@ public class Hotel {
                    case 1: viewHotels(esql); break;
                    case 2: viewRooms(esql); break;
                    case 3: bookRooms(esql, authorisedUser); break;
-                   case 4: viewRecentBookingsfromCustomer(esql, authorisedUser); break;
+                   case 4: viewRecentBookingsfromCustomer(esql); break;
                    case 5: updateRoomInfo(esql, authorisedUser); break;
                    case 6: viewRecentUpdates(esql); break;
                    case 7: viewBookingHistoryofHotel(esql); break;
@@ -529,12 +529,8 @@ public class Hotel {
      
 
    }
-   public static void viewRecentBookingsfromCustomer(Hotel esql, String authorisedUser) {
+   public static void viewRecentBookingsfromCustomer(Hotel esql) {
       try{
-         if (!isManager(esql, authorisedUser)){
-            System.out.print("\tWhoops! We're sorry. This option is only available for managers.\n")
-            return; 
-         }
          String query = String.format("select RoomBookings.hotelID, RoomBookings.roomNumber, RoomBookings.bookingDate, Rooms.price from Rooms, RoomBookings where Rooms.roomNumber = RoomBookings.roomNumber and Rooms.hotelID = RoomBookings.hotelID and RoomBookings.customerID = %s order by RoomBookings.bookingDate desc limit 5;",authorisedUser); 
          int rowCount = esql.executeQueryAndPrintResult(query); 
          
@@ -574,12 +570,16 @@ public class Hotel {
                        query = String.format("UPDATE Rooms SET Rooms.price = %d WHERE Rooms.hotelID = %d AND Rooms.roomNumber = %d;", price, hotelID, roomNumber);
                        esql.executeUpdate(query);
                        System.out.println("\tRoom Price has been updated!");
+                       query = String.format("insert into roomUpdatesLog (updateNumber, managerID, hotelID) values(DEFAULT, %s, %d, %d)", authorisedUser, hotelID, roomNumber); 
+                       esql.executeUpdate(query); 
                        break;
                case 2: System.out.print("\tEnter New Image URL: ");
                        String url = in.readLine();
 
                        query = String.format("UPDATE Rooms SET imageURL = %d WHERE hotelID = %d AND roomNumber = %d;", url, hotelID, roomNumber);
                        esql.executeUpdate(query);
+                       query = String.format("insert into roomUpdatesLog (updateNumber, managerID, hotelID) values(DEFAULT, %s, %d, %d)", authorisedUser, hotelID, roomNumber); 
+                       esql.executeUpdate(query); 
                        System.out.println("\tRoom imageURL has been updated!");
                        break;
                case 3: updating = false; break;
@@ -601,13 +601,16 @@ public class Hotel {
          String query = String.format("SELECT * FROM RoomUpdatesLog R WHERE R.hotelID = %d;", hotelID);
          int rowCt = esql.executeQuery(query);
          if(rowCt == 0) {
-            System.out.print("Sorry, that hotel is not in our database.");
+            System.out.print("\tSorry, that hotel is not in our database.\n");
+            return; 
          }
 
-         query = String.format("(SELECT * FROM RoomUpdatesLog WHERE hotelID = %s ORDER BY updated ON DESC LIMIT 5) ORDER BY updatedON ASC;", hotelID);
+         query = String.format("(SELECT * FROM RoomUpdatesLog WHERE hotelID = %s ORDER BY updated ON DESC LIMIT 5) ORDER BY updated ON ASC;", hotelID);
          esql.executeQueryAndPrintResult(query);
       }catch(Exception e){
-         System.err.println(e.getMessage());
+         //System.err.println(e.getMessage());
+         System.out.println("\tInvalid input! Please try again.\n"); 
+         return; 
       }
    }
    public static void viewBookingHistoryofHotel(Hotel esql) {
@@ -685,6 +688,7 @@ public class Hotel {
          int rowCt = esql.executeQuery(query); 
          if (rowCt == 0) { 
             System.out.print("\tWe're sorry. This room and hotel do not exist in our database.");  
+            return; 
          }
 
          System.out.print("Enter Company ID: ");
@@ -693,8 +697,10 @@ public class Hotel {
          rowCt = esql.executeQuery(query);
          if(rowCt == 0) {
             System.out.print("\tWe're sorry. This Maintenance Company does not exist in our database.");  
+            return; 
          }
-         
+         query = String.format("INSERT INTO RoomRepairs();"); 
+
        // query = String.format("INSERT INTO RoomRepairs VALUES (DEFAULT, %d, %d, %d, '%s');", companyID, hotelID, roomNumber, GETDATE())
 
 
