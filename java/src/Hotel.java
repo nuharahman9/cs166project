@@ -415,7 +415,7 @@ public class Hotel {
 // Rest of the functions definition go in here
 
    public static void viewHotels(Hotel esql) {
-      how do we call sql function from java? 
+      
       try{
          System.out.print("\tEnter latitude: "); 
          Float latitude = Float.parseFloat(in.readLine()); 
@@ -473,7 +473,7 @@ public class Hotel {
 	System.out.print("\tEnter the date of your stay (YYYY-MM-dd): "); 
 	dateSt = in.readLine();
    if (!isValidDate(dateSt)){
-      System.out.print("\tPlease enter a valid date according to the format 'YYYY-MM-dd'.")
+      System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).");
       return null; 
    }
 
@@ -579,12 +579,12 @@ public class Hotel {
          System.out.print("\tEnter Starting Booking Date: ");
          String sDate = in.readLine();
          if (!isValidDate(sDate)){
-            System.out.print("\tPlease enter a valid date according to the format 'YYYY-MM-dd'.")
+            System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).")
             return; }
          System.out.print("\tEnter Ending Booking Date: ");
          String eDate = in.readLine();
          if (!isValidDate(sDate)){
-            System.out.print("\tPlease enter a valid date according to the format 'YYYY-MM-dd'.")
+            System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).")
             return; }
             
          }catch(Exception e){
