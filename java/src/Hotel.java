@@ -619,16 +619,10 @@ public class Hotel {
    }
    public static void viewRegularCustomers(Hotel esql, String authorisedUser) {
       try{
-         String query = String.format("select Users.userType from Users where Users.userID = %s;", authorisedUser); 
-         List<List<String>>res = esql.executeQueryAndReturnResult(query); 
-         String userSt = ""; 
-         res.forEach(i -> {
-	         userSt = i; //should only run once since were checking against user id
-	      });	
-         if (!(userSt.contains("manager"))){
+         if (!(isManager(esql, authorisedUser))){
             System.out.println("\tWhoops! We're sorry, this option is only available for managers."); 
             return; 
-         }
+         }ß
          System.out.print("\tEnter hotelID: ");
          int hotelid = Integer.parseInt(in.readLine()); 
          query = String.format("select * from Hotel where Hotel.managerID = %s and Hotel.hotelID = %d;", authorisedUser, hotelid); 
