@@ -197,7 +197,7 @@ public class Hotel {
        stmt.close ();
        return rowCount;
    }
-   public boolean isValidDate(String input){
+   public static boolean isValidDate(String input){
       SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd"); 
       format.setLenient(false); 
       try{
@@ -425,8 +425,8 @@ public class Hotel {
                }
             }
 
-         System.out.println(UserType); //debug statement 
-         if (UserType.contains("manager"){
+        
+         if (UserType.contains("manager")){
             return true; 
          }
          return false; 
@@ -448,11 +448,11 @@ public class Hotel {
          Float latitude = Float.parseFloat(in.readLine()); 
          System.out.print("\tEnter longitude: "); 
          Float longitude = Float.parseFloat(in.readLine()); 
-         String query = String.format("select * from Hotel where calculate_distance(Hotel.latitude, Hotel.longitude, %e, %e) < 30;", latitude, longitude);
+         String query = String.format("select Hotel.hotelID, Hotel.hotelName, calculate_distance(Hotel.latitude, Hotel.longitude, %e, %e) as UnitsAway from Hotel where calculate_distance(Hotel.latitude, Hotel.longitude, %e, %e) < 30;", latitude, longitude, latitude, longitude);
          int rowCount = esql.executeQueryAndPrintResult(query); 
 
       }catch(Exception e){
-         System.err.println(e.getMessage()); 
+         System.out.println("\tPlease enter a valid input.\t"); 
          return; 
       }
 
@@ -493,20 +493,21 @@ public class Hotel {
 	String query = String.format( "select * from Rooms where Rooms.roomNumber = %d and Rooms.hotelID = %d;", roomnum, hotelid); 	
 	int rowCt = esql.executeQuery(query); 
 	if (rowCt == 0) { 
-		System.out.print("\tWe're sorry. This room and hotel do not exist in our database."); 
+		System.out.print("\tWe're sorry. This room and hotel do not exist in our database.\t"); 
 		return; 
 	}
 	System.out.print("\tEnter the date of your stay (YYYY-MM-dd): "); 
 	dateSt = in.readLine();
    if (!isValidDate(dateSt)){
-      System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).");
+      System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).\t");
       return; 
    }
 
-	query = String.format("select * from RoomBookings WHERE RoomBookings.roomNumber = %d and RoomBookings.hotelID = %d and RoomBookings.bookingDate = '%s';", hotelid, roomnum, dateSt);
+	query = String.format("select * from RoomBookings WHERE RoomBookings.roomNumber = %d and RoomBookings.hotelID = %d and RoomBookings.bookingDate = '%s';", roomnum, hotelid, dateSt);
         rowCt = esql.executeQuery(query); 
+	
 	if (rowCt != 0) {
-		System.out.print("\tWe're sorry. The room you requested is not available. Please try a different date or room. "); 
+		System.out.print("\tWe're sorry. The room you requested is not available. Please try a different date or room.\n"); 
 		return; 
 	}
 	query = String.format("insert into RoomBookings VALUES (DEFAULT, %s, %d, %d, '%s');", authorisedUser, hotelid, roomnum, dateSt); 
@@ -518,15 +519,16 @@ public class Hotel {
 	   System.out.println(i + "\t"); 
 	});	
       }catch(Exception e){ 
-		System.out.println("\tIt appears that your input was invalid! Please try again."); 
-      return; 
+		//System.out.println("\tIt appears that your input was invalid! Please try again.\t"); 
+      		System.err.println(e.getMessage());
+	      return; 
 	}
      
 
    }
    public static void viewRecentBookingsfromCustomer(Hotel esql, String authorisedUser) {
       try{
-         String query = String.format("select RoomBookings.hotelID, RoomBookings.roomNumber, RoomBookings.bookingDate, Rooms.price from Rooms, RoomBookings where Rooms.roomNumber = RoomBookings.roomNumber and Rooms.hotelID = RoomBookings.hotelID and RoomBookings.customerID = %s order by RoomBookings.bookingDate desc limit 5",authorisedUser); 
+         String query = String.format("select RoomBookings.hotelID, RoomBookings.roomNumber, RoomBookings.bookingDate, Rooms.price from Rooms, RoomBookings where Rooms.roomNumber = RoomBookings.roomNumber and Rooms.hotelID = RoomBookings.hotelID and RoomBookings.customerID = %s order by RoomBookings.bookingDate desc limit 5;",authorisedUser); 
          int rowCount = esql.executeQueryAndPrintResult(query); 
          
       }catch(Exception e){
@@ -544,7 +546,7 @@ public class Hotel {
          String query = String.format( "select * from Rooms where Rooms.roomNumber = %d and Rooms.hotelID = %d;", roomNumber, hotelID); 	
          int rowCt = esql.executeQuery(query); 
          if (rowCt == 0) { 
-            System.out.print("\tWe're sorry. This room and hotel do not exist in our database.");  
+            System.out.print("\tWe're sorry. This room and hotel do not exist in our database.\t");  
          }
 
          boolean updating = true;
@@ -609,12 +611,12 @@ public class Hotel {
          System.out.print("\tEnter Starting Booking Date: ");
          String sDate = in.readLine();
          if (!isValidDate(sDate)){
-            System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).")
+            System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).");
             return; }
          System.out.print("\tEnter Ending Booking Date: ");
          String eDate = in.readLine();
          if (!isValidDate(sDate)){
-            System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).")
+            System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).");
             return; }
             
          }catch(Exception e){
@@ -670,7 +672,7 @@ public class Hotel {
             System.out.print("\tWe're sorry. This Maintenance Company does not exist in our database.");  
          }
          
-         query = String.format("INSERT INTO RoomRepairs VALUES (DEFAULT, %d, %d, %d, '%s');", companyID, hotelID, roomNumber, GETDATE())
+        // query = String.format("INSERT INTO RoomRepairs VALUES (DEFAULT, %d, %d, %d, '%s');", companyID, hotelID, roomNumber, GETDATE())
 
 
       }catch(Exception e){
