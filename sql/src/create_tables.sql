@@ -53,11 +53,6 @@ CREATE TABLE RoomBookings (
 );
 
 
-CREATE VIEW RoomPriceView AS 
-SELECT RoomBookings.bookingDate, RoomBookings.customerID, RoomBookings.hotelID, RoomBookings.roomNumber, 
-RoomBookings.bookingDate, Rooms.price
-FROM RoomBookings, Rooms 
-WHERE Rooms.hotelID = RoomBookings.hotelID AND Rooms.roomNumber = RoomBookings.roomNumber; 
 
 CREATE TABLE RoomRepairs (  
                             repairID serial,
@@ -92,9 +87,12 @@ CREATE TABLE RoomUpdatesLog (
                             FOREIGN KEY(hotelID, roomNumber) REFERENCES Rooms(hotelID, roomNumber)
 );
 
+
+
 ---The following is the definition of a user-defined sql function for calculating the distance between two lat-long pairs.
 CREATE OR REPLACE FUNCTION calculate_distance(lat1 decimal, long1 decimal, lat2 decimal, long2 decimal)
 RETURNS decimal AS $dist$
 BEGIN RETURN sqrt((lat1 - lat2) * (lat1 - lat2) + (long1 - long2) * (long1 - long2));
 END;
 $dist$ LANGUAGE plpgsql;
+
