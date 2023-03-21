@@ -414,6 +414,33 @@ public class Hotel {
 
 // Rest of the functions definition go in here
 
+    public static boolean isManager(Hotel esql, String user){
+      try {
+         String query = String.format("select Users.userType from Users where Users.userID = %s;", user);
+         List<List<String>> res = esql.executeQueryAndReturnResult(query);
+         String UserType = "";
+            for( List<String> l : res){
+               for (String s : l) {
+                  UserType = s;
+               }
+            }
+
+         System.out.println(UserType); //debug statement 
+         if (UserType.contains("manager"){
+            return true; 
+         }
+         return false; 
+
+
+        } catch(Exception e){
+                System.err.println(e.getMessage());
+               return false;
+        }
+
+
+   }
+
+
    public static void viewHotels(Hotel esql) {
       
       try{
@@ -426,13 +453,12 @@ public class Hotel {
 
       }catch(Exception e){
          System.err.println(e.getMessage()); 
-         return null; 
+         return; 
       }
 
    }
    public static void viewRooms(Hotel esql) {
-      // java.sql.Date sqlDate = null; 
-      // //? come back for dates in string query 
+    
 
       // try{
       //    System.out.print("\tEnter date of stay (yyyy-MM-dd): "); 
@@ -441,7 +467,7 @@ public class Hotel {
 
       // }catch(IllegalArgumentException e){
       //    System.err.println(e.getMessage()); 
-      //    return null; 
+      //    return; 
       // }
 
       // try{
@@ -451,7 +477,7 @@ public class Hotel {
 
       // }catch(Exception e){
       //    System.err.println (e.getMessage()); 
-      //    return null; 
+      //    returnß; 
       // }
 
    }
@@ -468,20 +494,20 @@ public class Hotel {
 	int rowCt = esql.executeQuery(query); 
 	if (rowCt == 0) { 
 		System.out.print("\tWe're sorry. This room and hotel do not exist in our database."); 
-		return null; 
+		return; 
 	}
 	System.out.print("\tEnter the date of your stay (YYYY-MM-dd): "); 
 	dateSt = in.readLine();
    if (!isValidDate(dateSt)){
       System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).");
-      return null; 
+      return; 
    }
 
 	query = String.format("select * from RoomBookings WHERE RoomBookings.roomNumber = %d and RoomBookings.hotelID = %d and RoomBookings.bookingDate = '%s';", hotelid, roomnum, dateSt);
         rowCt = esql.executeQuery(query); 
 	if (rowCt != 0) {
 		System.out.print("\tWe're sorry. The room you requested is not available. Please try a different date or room. "); 
-		return null;; 
+		return; 
 	}
 	query = String.format("insert into RoomBookings VALUES (DEFAULT, %s, %d, %d, '%s');", authorisedUser, hotelid, roomnum, dateSt); 
       	esql.executeUpdate(query);
@@ -493,7 +519,7 @@ public class Hotel {
 	});	
       }catch(Exception e){ 
 		System.out.println("\tIt appears that your input was invalid! Please try again."); 
-      return null; 
+      return; 
 	}
      
 
@@ -601,7 +627,7 @@ public class Hotel {
 	      });	
          if (!(userSt.contains("manager"))){
             System.out.println("\tWhoops! We're sorry, this option is only available for managers."); 
-            return null; 
+            return; 
          }
          System.out.print("\tEnter hotelID: ");
          int hotelid = Integer.parseInt(in.readLine()); 
@@ -609,7 +635,7 @@ public class Hotel {
          int rowCount = esql.executeQuery(query); 
          if (rowCount == 0){
             System.out.print("\tWe're sorry. Please enter a valid hotel."); 
-            return null; 
+            return; 
          }
          query = String.format("select Users.userID, Users.name, count(distinct RoomBookings.bookingID) as numberBookings from Users, Hotel, RoomBookings where Users.userID = RoomBookings.customerID and RoomBookings.hotelID = %s group by Users.userID, Users.name order by count(RoomBookings.bookingID) desc limit 5;", authorisedUser); 
          System.out.print("\tThe top 5 customers in this hotel are: "); 
@@ -618,7 +644,7 @@ public class Hotel {
 
       }catch(Exception e){
          System.err.println(e.getMessage()); 
-         return null; 
+         return; 
       }
 
 
