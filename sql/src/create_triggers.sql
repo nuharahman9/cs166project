@@ -28,7 +28,7 @@ $BODY$
 LANGUAGE plpgsql VOLATILE; 
 
 DROP TRIGGER IF EXISTS roomrepair_trigger ON RoomRepairs;
-CREATE TRIGGER roomupdate_trigger
+CREATE TRIGGER roomrepair_trigger
 BEFORE INSERT 
 ON RoomRepairs 
 FOR EACH ROW 
