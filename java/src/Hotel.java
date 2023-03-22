@@ -615,7 +615,7 @@ public class Hotel {
             return; 
          }
 
-         query = String.format("(SELECT * FROM RoomUpdatesLog WHERE hotelID = %s ORDER BY updatedON DESC LIMIT 5) ORDER BY updatedON ASC;", hotelID);
+         query = String.format("SELECT * FROM RoomUpdatesLog WHERE hotelID = %s ORDER BY updatedON DESC LIMIT 5;", hotelID);
          esql.executeQueryAndPrintResult(query);
       }catch(Exception e){
          System.err.println(e.getMessage());
