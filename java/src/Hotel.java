@@ -561,6 +561,7 @@ public class Hotel {
 
          boolean updating = true;
          while(updating) {
+            System.out.println("...........................");
             System.out.println("1. Update Room Price");
             System.out.println("2. Update Room imageURL");
             System.out.println("...........................");
@@ -569,29 +570,29 @@ public class Hotel {
             switch(readChoice()) {
                case 1: System.out.print("\tEnter New Room Price: ");
                        int price = Integer.parseInt(in.readLine());
-                       query = String.format("UPDATE Rooms SET Rooms.price = %d WHERE Rooms.hotelID = %d AND Rooms.roomNumber = %d;", price, hotelID, roomNumber);
+                       query = String.format("UPDATE Rooms SET price = %d WHERE hotelID = %d AND roomNumber = %d;", price, hotelID, roomNumber);
                        esql.executeUpdate(query);
                        System.out.println("\tRoom Price has been updated!");
-                       query = String.format("insert into roomUpdatesLog (updateNumber, managerID, hotelID) values(DEFAULT, %s, %d, %d)", authorisedUser, hotelID, roomNumber); 
+                       query = String.format("INSERT INTO roomUpdatesLog (updateNumber, managerID, hotelID, roomNumber) values(DEFAULT, %s, %d, %d)", authorisedUser, hotelID, roomNumber); 
                        esql.executeUpdate(query); 
                        break;
                case 2: System.out.print("\tEnter New Image URL: ");
                        String url = in.readLine();
 
-                       query = String.format("UPDATE Rooms SET imageURL = %d WHERE hotelID = %d AND roomNumber = %d;", url, hotelID, roomNumber);
+                       query = String.format("UPDATE Rooms SET imageURL = '%s' WHERE hotelID = %d AND roomNumber = %d;", url, hotelID, roomNumber);
                        esql.executeUpdate(query);
-                       query = String.format("insert into roomUpdatesLog (updateNumber, managerID, hotelID) values(DEFAULT, %s, %d, %d)", authorisedUser, hotelID, roomNumber); 
+                       query = String.format("insert into roomUpdatesLog (updateNumber, managerID, hotelID, roomNumber) values(DEFAULT, %s, %d, %d)", authorisedUser, hotelID, roomNumber); 
                        esql.executeUpdate(query); 
                        System.out.println("\tRoom imageURL has been updated!");
                        break;
                case 3: updating = false; break;
                default: System.out.print("Invalid Input, please try again\n"); break;
-               //INSERT stuff
+               
             }
          }
       }catch(Exception e){
          System.err.println(e.getMessage());
-        // System.out.println("\tYour input was invalid! Please try again.\n"); -- add this back in when done debugging - more user friendly :D 
+         //System.out.println("\tYour input was invalid! Please try again.\n"); -- add this back in when done debugging - more user friendly :D 
          return; 
       }
    }
@@ -607,7 +608,7 @@ public class Hotel {
             return; 
          }
 
-         query = String.format("(SELECT * FROM RoomUpdatesLog WHERE hotelID = %s ORDER BY updated ON DESC LIMIT 5) ORDER BY updated ON ASC;", hotelID);
+         query = String.format("(SELECT * FROM RoomUpdatesLog WHERE hotelID = %s ORDER BY updatedON DESC LIMIT 5) ORDER BY updatedON ASC;", hotelID);
          esql.executeQueryAndPrintResult(query);
       }catch(Exception e){
          //System.err.println(e.getMessage());
@@ -702,9 +703,10 @@ public class Hotel {
             System.out.print("\tWe're sorry. This Maintenance Company does not exist in our database.");  
             return; 
          }
-         query = String.format("INSERT INTO RoomRepairs();"); 
+         query = String.format("INSERT INTO RoomRepairs VALUES (DEFAULT, &d, %d, %d, set_date());", companyID, hotelID, roomNumber); 
+         esql.executeQuery(query);
 
-       // query = String.format("INSERT INTO RoomRepairs VALUES (DEFAULT, %d, %d, %d, '%s');", companyID, hotelID, roomNumber, GETDATE())
+         query = String.format("SELECT * ");
 
 
       }catch(Exception e){
