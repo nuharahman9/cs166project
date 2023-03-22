@@ -624,13 +624,6 @@ public class Hotel {
                System.out.print("\tWhoops! We're sorry. This option is only available for managers.\n")
                return; 
             }
-         System.out.print("\tEnter Hotel ID: ");
-         int hotelID = Integer.parseInt(in.readLine());
-         String query = String.format( "SELECT * FROM Rooms WHERE Rooms.hotelID = %d;", hotelID); 	
-         int rowCt = esql.executeQuery(query); 
-         if (rowCt == 0) { 
-            System.out.print("\tWe're sorry. This room and hotel do not exist in our database.\n");  
-         }
 
          System.out.print("\tEnter Starting Booking Date: ");
          String sDate = in.readLine();
@@ -645,7 +638,7 @@ public class Hotel {
             return; 
          }
          
-         query =  String.format("SELECT * FROM RoomBookings WHERE DATE(bookingDate) BETWEEN '%s' AND '%s';", sDate, eDate);
+         String query =  String.format("SELECT * FROM RoomBookings WHERE DATE(bookingDate) BETWEEN '%s' AND '%s';", sDate, eDate);
          esql.executeQueryAndPrintResult(query);
          
 
