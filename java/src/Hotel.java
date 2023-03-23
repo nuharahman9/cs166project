@@ -546,7 +546,6 @@ public class Hotel {
 
    }
    public static void updateRoomInfo(Hotel esql, String authorisedUser) {
-      //hotelID, roomNumber, price, imageURL
       try{
          if (!isManager(esql, authorisedUser)){
             System.out.print("\tWhoops! We're sorry. This option is only available for managers.\n");
@@ -595,44 +594,42 @@ public class Hotel {
                
             }
          }
-      }catch(Exception e){
-         System.err.println(e.getMessage());
-         //System.out.println("\tYour input was invalid! Please try again.\n"); -- add this back in when done debugging - more user friendly :D 
+      }catch(Exception e) { 
+         System.out.println("\tYour input was invalid! Please try again.\n");
          return; 
       }
    }
 
    public static void viewRecentUpdates(Hotel esql, String authorisedUser) {
       try{ 
-	if (!isManager(esql, authorisedUser)){ 
-		System.out.println("\tWhoops! this option is only available for managers.\n"); 
-		return; 
-	}
+         if (!isManager(esql, authorisedUser)){ 
+            System.out.println("\tWhoops! this option is only available for managers.\n"); 
+            return; 
+         }
 
          String query = String.format("SELECT * FROM RoomUpdatesLog WHERE managerID = %s ORDER BY updatedOn desc limit 5;", authorisedUser);
          System.out.println("---------------Your recent updates-----------\n"); 
-	 esql.executeQueryAndPrintResult(query);
-	 System.out.println("---------------------------------------------\n"); 
+	      esql.executeQueryAndPrintResult(query);
+	      System.out.println("---------------------------------------------\n"); 
       }catch(Exception e){
          System.err.println(e.getMessage());
-         System.out.println("\tInvalid input! Please try again.\n"); 
+         System.out.println("\tWe're sorry! Please try again.\n"); 
          return; 
       }
    }
    public static void viewBookingHistoryofHotel(Hotel esql, String authorisedUser) {
-      //bookingID, customer name, hotelID, roomNumber, bookingDate
       try{
-            if (!isManager(esql, authorisedUser)){
-               System.out.print("\tWhoops! We're sorry. This option is only available for managers.\n");
-               return; 
-            }
+         if (!isManager(esql, authorisedUser)){
+            System.out.print("\tWhoops! We're sorry. This option is only available for managers.\n");
+            return; 
+         }
          System.out.print("\tEnter Hotel ID: ");
          int hotelID = Integer.parseInt(in.readLine());
          String query = String.format( "SELECT * FROM Hotel WHERE Hotel.hotelID = %d and Hotel.managerUserID = %s;", hotelID, authorisedUser); 	
          int rowCt = esql.executeQuery(query); 
          if (rowCt == 0) { 
             System.out.print("\tPlease enter a valid hotel.\n");  
-	    return; 
+	         return; 
          }
 
          System.out.print("\tEnter Starting Booking Date: ");
@@ -647,14 +644,13 @@ public class Hotel {
             System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).\n");
             return; 
          }
-	  query =  String.format("SELECT * FROM RoomBookings WHERE DATE(bookingDate) BETWEEN '%s' AND '%s';", sDate, eDate);
-          System.out.println("-------Booking history for this hotel------\n");
+	      query =  String.format("SELECT * FROM RoomBookings WHERE DATE(bookingDate) BETWEEN '%s' AND '%s';", sDate, eDate);
+         System.out.println("-------Booking history for this hotel------\n");
 	  
-	  esql.executeQueryAndPrintResult(query);  
+	      esql.executeQueryAndPrintResult(query);  
 
 	  System.out.println("-------------------------------------------\n"); 
          }catch(Exception e){
-            //System.err.println(e.getMessage());
 	    System.out.println("Your input was invalid! Please try again.\n"); 
 	    return;
          }
@@ -679,7 +675,6 @@ public class Hotel {
 
 
       }catch(Exception e){
-         //System.err.println(e.getMessage()); 
 	 System.out.println("\tYour input was invalid! Please try again.\n");
          return; 
       }
@@ -688,7 +683,6 @@ public class Hotel {
 
    }
    public static void placeRoomRepairRequests(Hotel esql, String authorisedUser) {
-      //hotelID, roomNumber, companyID
       try{
          if (!isManager(esql, authorisedUser)){
             System.out.print("\tWhoops! We're sorry. This option is only available for managers.\n");
@@ -741,7 +735,6 @@ public class Hotel {
 	  
 
       }catch(Exception e){
-         //System.err.println(e.getMessage());
 	 System.out.println("\tIt appears your input was invalid! Please try again.\n"); 
 	 return; 
       }
