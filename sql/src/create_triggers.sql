@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION set_date()
 RETURNS "trigger" AS 
 $BODY$
 BEGIN 
-	NEW.repairDate = GETDATE();  
+	NEW.repairDate = CURRENT_DATE;  
 	RETURN NEW; 
 END; 
 $BODY$
