@@ -610,7 +610,9 @@ public class Hotel {
 	}
 
          String query = String.format("SELECT * FROM RoomUpdatesLog WHERE managerID = %s ORDER BY updatedOn desc limit 5;", authorisedUser);
-         esql.executeQueryAndPrintResult(query);
+         System.out.println("---------------Your recent updates-----------\n"); 
+	 esql.executeQueryAndPrintResult(query);
+	 System.out.println("---------------------------------------------\n"); 
       }catch(Exception e){
          System.err.println(e.getMessage());
          System.out.println("\tInvalid input! Please try again.\n"); 
@@ -641,7 +643,7 @@ public class Hotel {
          }
          System.out.print("\tEnter Ending Booking Date: ");
          String eDate = in.readLine();
-         if (!isValidDate(sDate)){
+         if (!isValidDate(eDate)){
             System.out.print("\tPlease enter a valid date according to the format (YYYY-MM-dd).\n");
             return; 
          }
@@ -652,7 +654,7 @@ public class Hotel {
 
 	  System.out.println("-------------------------------------------\n"); 
          }catch(Exception e){
-            System.err.println(e.getMessage());
+            //System.err.println(e.getMessage());
 	    System.out.println("Your input was invalid! Please try again.\n"); 
 	    return;
          }
